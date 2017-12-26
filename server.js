@@ -136,10 +136,13 @@ app.delete('/api/Attenders', function (req, res, next) {
       });
     },
     function (eventId, attenderName, pinCode) {
-      Event.update({ eventId: eventId }, { $pull: { attenders: { name: attenderName } } }, function (err) {
+      Event.findOneAndUpdate({ eventId: eventId }
+        , { $pull: { attenders: { name: attenderName } } }
+        , {new : true}
+        , function (err, event) {
         if (err) return next(err);
        
-        res.send({ attender: { name: attenderName, pinCode: pinCode }, message: 'Removido com sucesso.' });
+        res.send({event: event, message: 'Removido com sucesso.' });
       });
     }
   ]);

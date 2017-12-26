@@ -17,6 +17,7 @@ class EventStore {
 
   onRemoveAttenderSuccess(data) {
     toastr.success(data.message);
+    this.event = data.event;
   }
 
   onRemoveAttenderFail(errorMessage) {

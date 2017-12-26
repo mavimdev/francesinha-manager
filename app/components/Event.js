@@ -50,8 +50,8 @@ class Event extends React.Component {
             {/* <td className='col-lg-1 edit' onClick={this.editAttender.bind(this, attender)}>
               Editar
             </td> */}
-            <td className='col-lg-1 remove' onClick={this.removeAttender.bind(this, attender)}>
-              Remover
+            <td className='col-lg-1  col-xs-1 remove'>
+              <a type='button' className='btn btn-default btn-xs' onClick={this.removeAttender.bind(this, attender)}> Remover</a>
             </td>
           </tr>
         )
@@ -69,7 +69,7 @@ class Event extends React.Component {
             </thead>
             <tbody>
               {attenders}
-              <tr className='text-center'>
+              <tr>
                 <td colSpan='3'>
                   <strong> Total: {attenders.length} </strong>
                 </td>
