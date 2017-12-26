@@ -13,7 +13,7 @@ class AddAttenderActions {
   addAttender(name, eventId, pinCode) {
     $.ajax({
       type: 'POST',
-      url: '/api/Attenders',
+      url: '/api/attenders',
       data: { name: name, eventId: eventId, pinCode: pinCode}
     })
       .done((data) => {

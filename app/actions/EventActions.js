@@ -3,34 +3,52 @@ import alt from '../alt';
 class EventActions {
   constructor() {
     this.generateActions(
-      'getEventSuccess',
-      'getEventFail',
-      'removeAttenderSuccess',
-      'removeAttenderFail'
+      'getEventsSuccess',
+      'getEventsFail',
+      'addEventSuccess',
+      'addEventFail',
+      'removeEventSuccess',
+      'removeEventFail',
+      'updateName',
+      'invalidName'
     );
   }
 
-  getEvent(eventId) {
-    $.ajax({ url: '/api/event/' + eventId })
+  getEvents() {
+    $.ajax({ url: '/api/events/' + new Date().getFullYear() })
       .done((data) => {
-        this.actions.getEventSuccess(data);
+        this.actions.getEventsSuccess(data)
       })
       .fail((jqXhr) => {
-        this.actions.getEventFail(jqXhr);
+        this.actions.getEventsFail(jqXhr)
       });
   }
 
-  removeAttender(attender, eventId) {
+  AddEvent(event) {
     $.ajax({
-      type: 'DELETE',
-      url: '/api/Attenders',
-      data: { name: attender.name, eventId: eventId, pinCode: attender.pinCode}
+      type: 'POST',
+      url: '/api/events',
+      data: { event: event}
     })
       .done((data) => {
-        this.actions.removeAttenderSuccess(data);
+        this.actions.AddEventSuccess(data);
       })
       .fail((jqXhr) => {
-        this.actions.removeAttenderFail(jqXhr.responseJSON.message);
+        this.actions.AddEventFail(jqXhr.responseJSON.message);
+      });
+  }
+
+  removeEvent(event) {
+    $.ajax({
+      type: 'DELETE',
+      url: '/api/events',
+      data: { event: event}
+    })
+      .done((data) => {
+        this.actions.removeEventSuccess(data);
+      })
+      .fail((jqXhr) => {
+        this.actions.removeEventFail(jqXhr.responseJSON.message);
       });
   }
 

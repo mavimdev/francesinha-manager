@@ -4,23 +4,23 @@ import EventActions from '../actions/EventActions';
 class EventStore {
   constructor() {
     this.bindActions(EventActions);
-    this.event = {};
+    this.events = [];
   }
 
-  onGetEventSuccess(data) {
-    this.event = data;
+  onGetEventsSuccess(data) {
+    this.events = data;
   }
 
-  onGetEventFail(jqXhr) {
+  onGetEventsFail(jqXhr) {
     toastr.error(jqXhr.responseJSON.message);
   }
 
-  onRemoveAttenderSuccess(data) {
+  onRemoveEventSuccess(data) {
     toastr.success(data.message);
     this.event = data.event;
   }
 
-  onRemoveAttenderFail(errorMessage) {
+  onRemoveEventFail(errorMessage) {
     toastr.error(jqXhr.responseJSON.message);
   }
 }

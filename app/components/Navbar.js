@@ -84,7 +84,6 @@ class Navbar extends React.Component {
                 {events}
               </ul>
             </li>
-            <li><Link to='/add'>Add</Link></li>
           </ul>
         </div>
       </nav>
