@@ -1,6 +1,7 @@
 // Babel ES6/JSX Compiler
 require('babel-register');
 
+var moment = require('moment');
 var _ = require('underscore');
 var async = require('async');
 var request = require('request');
@@ -18,6 +19,10 @@ var config = require('./config');
 var routes = require('./app/routes');
 var Character = require('./models/character');
 var Event = require('./models/event');
+
+var MONTHS_DESC = ['Janeiro', 'Fevereiro', 'Março', 'Abril'
+  , 'Maio', 'Junho', 'Julho', 'Agosto'
+  , 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
 mongoose.connect(config.database);
 mongoose.connection.on('error', function () {
@@ -141,12 +146,12 @@ app.delete('/api/attenders', function (req, res, next) {
     function (eventId, attenderName, pinCode) {
       Event.findOneAndUpdate({ eventId: eventId }
         , { $pull: { attenders: { name: attenderName } } }
-        , {new : true}
+        , { new: true }
         , function (err, event) {
-        if (err) return next(err);
-       
-        res.send({event: event, message: 'Removido com sucesso.' });
-      });
+          if (err) return next(err);
+
+          res.send({ event: event, message: 'Removido com sucesso.' });
+        });
     }
   ]);
 });
@@ -156,34 +161,65 @@ app.delete('/api/attenders', function (req, res, next) {
  * Adds new event (with the organizer) to the database.
  */
 app.post('/api/events', function (req, res, next) {
-  var attenderName = req.body.name;
+  var organizerName = req.body.organizerName;
   var pinCode = req.body.pinCode;
-  var eventId = Number(req.body.eventId);
+  var currentYear = new Date().getFullYear();
 
   async.waterfall([
     function (callback) {
-      Event.findOne({ eventId: eventId }, function (err, event) {
+      Event.findOne({ $and: [{ organizerName: organizerName }, { year: currentYear }] }, function (err, event) {
         if (err) return next(err);
 
-        if (!event) {
-          return res.status(409).send({ message: 'Não existe esse evento.' });
+        if (event) {
+          return res.status(409).send({ message: 'Não pode organizar mais de um evento.' });
         }
-
-        if (_.find(event.attenders, function (attender) {
-          return attenderName.toUpperCase() === attender.name.toUpperCase();
-        })) {
-          return res.status(409).send({ message: 'Esse nome já se encontra nos inscritos.' });
-        }
-
-        callback(err, eventId, attenderName, pinCode);
-      });
+        callback(null, 'one');
+      })
     },
-
-    function (eventId, attenderName, pinCode) {
-      Event.update({ eventId: eventId }, { $push: { attenders: { name: attenderName, pinCode: pinCode } } }, function (err) {
+    function (arg1, callback) {
+      var usedMonths = [];
+      Event.find({ year: currentYear }, function (err, events) {
         if (err) return next(err);
-        res.send({ attender: { name: attenderName, pinCode: pinCode }, message: 'Inscrito com sucesso.' });
+
+        usedMonths = _.map(events, function (event) { return event.month; });
+        callback(null, usedMonths);
+      })
+    },
+    function (usedMonths, callback) {
+      var randomMonth = _.sample(_.difference(_.range(11), usedMonths));
+
+      var event = new Event({
+        eventId: randomMonth,
+        desc: MONTHS_DESC[randomMonth],
+        organizerName: organizerName,
+        pinCode: pinCode,
+        local: "",
+        date: moment(new Date(currentYear, randomMonth + 1, 1)).day(-5),
+        month: randomMonth,
+        year: currentYear,
+        attenders: [{
+          name: organizerName,
+          pinCode: pinCode
+        }]
       });
+
+      event.save(function (err) {
+        if (err) return next(err);
+
+        callback(null, "two");
+      })
+    },
+    function (arg1, callback) {
+      var numMonths = Event.count({ year: currentYear });
+      callback(null, numMonths);
+    },
+    function (err, numMonths) {
+      if (numMonths == MONTHS_DESC.length) {
+        Event.update({ year: currentYear }, { monthVisible: true }, function (err) {
+          if (err) return next(err);
+        })
+      }
+      res.send({ message: 'Inscrição efetuada com sucesso' });
     }
   ]);
 });

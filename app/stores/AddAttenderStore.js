@@ -10,7 +10,6 @@ class AddAttenderStore {
     this.helpBlock = '';
     this.success = '';
     this.nameValidationState = '';
-    this.genderValidationState = '';
   }
 
   onAddAttenderSuccess(data) {

@@ -8,6 +8,7 @@ var eventSchema = new mongoose.Schema({
   local: String,
   date: Date,
   month: Number,
+  monthVisible: Boolean,
   year: Number,
   attenders: [{
     name: String,

@@ -1,13 +1,29 @@
 import React from 'react';
 import EventStore from '../stores/EventStore'
 import EventActions from '../actions/EventActions';
-import AddEvent from '../components/AddEvent';
+import moment from 'moment';
 
 class Event extends React.Component {
   constructor(props) {
     super(props);
     this.state = EventStore.getState();
     this.onChange = this.onChange.bind(this);
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+
+    var organizerName = this.state.organizerName.trim();
+    var pinCode = this.state.pinCode;
+
+    if (!organizerName) {
+      EventActions.invalidName();
+      this.refs.nameTextField.getDOMNode().focus();
+    }
+
+    if (organizerName) {
+      EventActions.addEvent(organizerName, pinCode);
+    }
   }
 
   componentDidMount() {
@@ -36,13 +52,13 @@ class Event extends React.Component {
             {event.desc}
           </td>
           <td>
-            {event.EventName}
+            {event.organizerName}
           </td>
           <td>
             {event.local}
           </td>
           <td>
-            {event.date}
+            {moment(event.date).format('DD-MM-YYYY')}
           </td>
           <td className='col-lg-1  col-xs-1 remove'>
             <a type='button' className='btn btn-default btn-xs' onClick={this.removeEvent.bind(this, event)}> Remover</a>
@@ -50,6 +66,17 @@ class Event extends React.Component {
         </tr>
       )
     });
+
+    const addEvent = (
+      <form className='form' onSubmit={this.handleSubmit.bind(this)}>
+        <div className={'form-group ' + this.state.organizerValidationState}>
+          <input type='text' className={'form-control ' + this.state.success} ref='nameTextField' value={this.state.organizerName}
+            placeholder="Nome" onChange={EventActions.updateOrganizer} autoFocus />
+          <span className='help-block'>{this.state.helpBlock}</span>
+        </div>
+        <button inline type='submit' className={'btn btn-primary ' + this.state.success}>Inscrever</button>
+      </form>
+    );
 
     return (
       <div className='container'>
@@ -72,7 +99,7 @@ class Event extends React.Component {
               </tr>
               <tr>
                 <td colSpan='5'>
-                  <AddEvent eventId={this.props.params.eventId} onChangeParent={this.onChange} />
+                  {addEvent}
                 </td>
               </tr>
             </tbody>

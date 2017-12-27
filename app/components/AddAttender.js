@@ -46,7 +46,6 @@ class AddAttender extends React.Component {
         <div className={'form-group ' + this.state.nameValidationState}>
           <input type='text' className={'form-control ' + this.state.success} ref='nameTextField' value={this.state.name}
             placeholder="Nome" onChange={AddAttenderActions.updateName} autoFocus />
-            <input type='hidden' value="1234"/>
           <span className='help-block'>{this.state.helpBlock}</span>
         </div>
         <button inline type='submit' className={'btn btn-primary ' + this.state.success}>Inscrever</button>

@@ -56,7 +56,8 @@
     "gulp-util": "^3.0.7",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.6.0"
+    "watchify": "^3.6.0",
+    "moment": "^2.20.1"
   },
   "devDependencies": {},
   "license": "MIT"

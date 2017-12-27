@@ -9,8 +9,8 @@ class EventActions {
       'addEventFail',
       'removeEventSuccess',
       'removeEventFail',
-      'updateName',
-      'invalidName'
+      'updateOrganizer',
+      'invalidOrganizer'
     );
   }
 
@@ -24,14 +24,17 @@ class EventActions {
       });
   }
 
-  AddEvent(event) {
+  addEvent(organizerName, pinCode) {
     $.ajax({
       type: 'POST',
       url: '/api/events',
-      data: { event: event}
+      data: { 
+        organizerName: organizerName, 
+        pinCode: pinCode
+      }
     })
       .done((data) => {
-        this.actions.AddEventSuccess(data);
+        this.actions.addEventSuccess(data);
       })
       .fail((jqXhr) => {
         this.actions.AddEventFail(jqXhr.responseJSON.message);
