@@ -173,10 +173,10 @@ app.post('/api/events', function (req, res, next) {
         if (event) {
           return res.status(409).send({ message: 'Não pode organizar mais de um evento.' });
         }
-        callback(null, 'one');
+        callback(null);
       })
     },
-    function (arg1, callback) {
+    function (callback) {
       var usedMonths = [];
       Event.find({ year: currentYear }, function (err, events) {
         if (err) return next(err);
@@ -206,20 +206,23 @@ app.post('/api/events', function (req, res, next) {
       event.save(function (err) {
         if (err) return next(err);
 
-        callback(null, "two");
+        callback(null);
       })
     },
-    function (arg1, callback) {
-      var numMonths = Event.count({ year: currentYear });
-      callback(null, numMonths);
+    function (callback) {
+      Event.find({ year: currentYear }, function (err, events) {
+        if (err) return next(err);
+
+        callback(null, events);
+      });
     },
-    function (err, numMonths) {
-      if (numMonths == MONTHS_DESC.length) {
+    function (events) {
+      if (events.length == MONTHS_DESC.length) {
         Event.update({ year: currentYear }, { monthVisible: true }, function (err) {
           if (err) return next(err);
         })
       }
-      res.send({ message: 'Inscrição efetuada com sucesso' });
+      res.send({events: events,  message: 'Inscrição efetuada com sucesso' });
     }
   ]);
 });

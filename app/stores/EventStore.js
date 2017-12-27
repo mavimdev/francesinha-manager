@@ -26,6 +26,7 @@ class EventStore {
     this.organizerName = '';
     this.pinCode = '';
     this.success = 'hide';
+    this.events = data.events;
   }
 
   onAddEventFail(errorMessage) {
