@@ -71,7 +71,7 @@ class Navbar extends React.Component {
               <div className='tri invert'></div>
             </span>
             FRANCESINHAS
-            <span className='badge badge-up badge-danger'>{this.state.onlineUsers}</span>
+            {/* <span className='badge badge-up badge-danger'>{this.state.onlineUsers}</span> */}
           </Link>
         </div>
         <div id='navbar' className='navbar-collapse collapse'>
@@ -85,6 +85,9 @@ class Navbar extends React.Component {
               </ul>
             </li>
           </ul>
+          <span className="navbar-text">
+            Inscritos este mês:
+          </span>
         </div>
       </nav>
     );

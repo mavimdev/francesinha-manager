@@ -4,20 +4,17 @@ import HomeActions from '../actions/HomeActions';
 class HomeStore {
   constructor() {
     this.bindActions(HomeActions);
-    this.characters = [];
+    this.event = {};
   }
 
-  onGetTwoCharactersSuccess(data) {
-    this.characters = data;
+  onGetCurrentEventSuccess(data) {
+    this.event = data;
   }
 
-  onGetTwoCharactersFail(errorMessage) {
-    toastr.error(errorMessage);
+  onGetCurrentEventFail(errorMessage) {
+    //do nothing. doesn't return data
   }
 
-  onVoteFail(errorMessage) {
-    toastr.error(errorMessage);
-  }
 }
 
 export default alt.createStore(HomeStore);

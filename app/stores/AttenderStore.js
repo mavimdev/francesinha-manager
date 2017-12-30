@@ -11,8 +11,8 @@ class AttenderStore {
     this.event = data;
   }
 
-  onGetAttendersFail(jqXhr) {
-    toastr.error(jqXhr.responseJSON.message);
+  onGetAttendersFail(errorMessage) {
+    toastr.error(errorMessage);
   }
 
   onRemoveAttenderSuccess(data) {
@@ -21,7 +21,7 @@ class AttenderStore {
   }
 
   onRemoveAttenderFail(errorMessage) {
-    toastr.error(jqXhr.responseJSON.message);
+    toastr.error(errorMessage);
   }
 }
 

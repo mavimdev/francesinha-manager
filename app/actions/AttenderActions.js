@@ -10,7 +10,7 @@ class AttenderActions {
     );
   }
 
-  getEvent(eventId) {
+  getAttenders(eventId) {
     $.ajax({ url: '/api/event/' + eventId })
       .done((data) => {
         this.actions.getAttendersSuccess(data);

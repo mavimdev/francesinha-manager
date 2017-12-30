@@ -156,6 +156,9 @@ app.delete('/api/attenders', function (req, res, next) {
   ]);
 });
 
+
+
+
 /**
  * POST /api/events
  * Adds new event (with the organizer) to the database.
@@ -189,13 +192,14 @@ app.post('/api/events', function (req, res, next) {
       var randomMonth = _.sample(_.difference(_.range(11), usedMonths));
 
       var event = new Event({
-        eventId: randomMonth,
+        eventId: currentYear.toString().concat(randomMonth),
         desc: MONTHS_DESC[randomMonth],
         organizerName: organizerName,
         pinCode: pinCode,
         local: "",
         date: moment(new Date(currentYear, randomMonth + 1, 1)).day(-5),
         month: randomMonth,
+        monthVisible: false,
         year: currentYear,
         attenders: [{
           name: organizerName,
@@ -222,7 +226,39 @@ app.post('/api/events', function (req, res, next) {
           if (err) return next(err);
         })
       }
-      res.send({events: events,  message: 'Inscrição efetuada com sucesso' });
+      res.send({ events: events, message: 'Inscrição efetuada com sucesso' });
+    }
+  ]);
+});
+
+
+/**
+ * DELETE /api/events
+ * Removes an event of the database.
+ */
+app.delete('/api/events', function (req, res, next) {
+  var eventId = req.body.eventId;
+  var pinCode = req.body.pinCode;
+
+  async.waterfall([
+    function (callback) {
+      Event.remove({ eventId: eventId, pinCode: pinCode }, function (err, result) {
+        if (err) return next(err);
+
+        if (result.nRemoved > 0) {
+          callback(null);
+        } else {
+          return res.status(404).send({ message: 'Evento não encontrado ou código PIN incorreto.' });
+        }
+
+      })
+    },
+    function () {
+      Event.find({ year: currentYear }, function (err, events) {
+        if (err) return next(err);
+
+        res.send({ events: events, message: 'Removido com sucesso' });
+      });
     }
   ]);
 });

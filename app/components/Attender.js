@@ -12,7 +12,7 @@ class Attender extends React.Component {
 
   componentDidMount() {
     AttenderStore.listen(this.onChange);
-    AttenderActions.getAttenders(this.props.params.eventId);
+    AttenderActions.getAttenders(this.props.eventId || this.props.params.eventId);
   }
 
   componentWillUnmount() {
@@ -21,7 +21,7 @@ class Attender extends React.Component {
 
   componentDidUpdate(prevProps) {
     // Fetch new event data when URL path changes
-    if (prevProps.params.eventId !== this.props.params.eventId) {
+    if (prevProps.params && prevProps.params.eventId !== this.props.params.eventId) {
       AttenderActions.getAttenders(this.props.params.eventId);
     }
   }
@@ -35,7 +35,7 @@ class Attender extends React.Component {
 
   removeAttender(attender, event) {
     event.preventDefault();
-    AttenderActions.removeAttender(attender, this.props.params.eventId);
+    AttenderActions.removeAttender(attender, this.props.eventId || this.props.params.eventId);
   }
 
   render() {
@@ -76,7 +76,7 @@ class Attender extends React.Component {
               </tr>
               <tr>
                 <td colSpan='3'>
-                  <AddAttender eventId={this.props.params.eventId} onChangeParent={this.onChange} />
+                  <AddAttender eventId={this.props.eventId || this.props.params.eventId} onChangeParent={this.onChange} />
                 </td>
               </tr>
             </tbody>

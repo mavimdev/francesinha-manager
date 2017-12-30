@@ -3,6 +3,8 @@ import EventStore from '../stores/EventStore'
 import EventActions from '../actions/EventActions';
 import moment from 'moment';
 
+const EVENTS_LIMIT = 12;
+
 class Event extends React.Component {
   constructor(props) {
     super(props);
@@ -49,7 +51,7 @@ class Event extends React.Component {
       return (
         <tr>
           <td>
-            {event.desc}
+            {event.monthVisible ? event.desc : "<Por atribuir>"}
           </td>
           <td>
             {event.organizerName}
@@ -67,16 +69,26 @@ class Event extends React.Component {
       )
     });
 
-    const addEvent = (
-      <form className='form' onSubmit={this.handleSubmit.bind(this)}>
-        <div className={'form-group ' + this.state.organizerValidationState}>
-          <input type='text' className={'form-control ' + this.state.success} ref='nameTextField' value={this.state.organizerName}
-            placeholder="Nome" onChange={EventActions.updateOrganizer} autoFocus />
-          <span className='help-block'>{this.state.helpBlock}</span>
-        </div>
-        <button inline type='submit' className={'btn btn-primary ' + this.state.success}>Inscrever</button>
-      </form>
-    );
+    var addEvent = null;
+    if (events.length < EVENTS_LIMIT) {
+      addEvent = (
+        <form className='form' onSubmit={this.handleSubmit.bind(this)}>
+          <div className={'form-group ' + this.state.organizerValidationState}>
+            <input type='text' className={'form-control ' + this.state.success} ref='nameTextField' value={this.state.organizerName}
+              placeholder="Nome" onChange={EventActions.updateOrganizer} autoFocus />
+            <span className='help-block'>{this.state.helpBlock}</span>
+          </div>
+          <button inline type='submit' className={'btn btn-primary ' + this.state.success}>Inscrever</button>
+          <div style={{'textAlign': 'center', 'color': '#FF9F00 '}}>Os meses serão atribuídos aleatóriamente quando houver 12 inscrições.</div>
+        </form>
+      );
+    } else {
+      addEvent = (
+      <div>
+        <strong>Inscrições fechadas. Todos os meses já se encontram atribuídos. </strong>
+      </div>
+      );
+    }
 
     return (
       <div className='container'>

@@ -16,8 +16,8 @@ class EventStore {
     this.events = data;
   }
 
-  onGetEventsFail(jqXhr) {
-    toastr.error(jqXhr.responseJSON.message);
+  onGetEventsFail(errorMessage) {
+    toastr.error(errorMessage);
   }
 
   onAddEventSuccess(data) {
@@ -51,7 +51,7 @@ class EventStore {
   }
 
   onRemoveEventFail(errorMessage) {
-    toastr.error(jqXhr.responseJSON.message);
+    toastr.error(errorMessage);
   }
 }
 
