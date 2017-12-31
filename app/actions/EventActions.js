@@ -37,15 +37,15 @@ class EventActions {
         this.actions.addEventSuccess(data);
       })
       .fail((jqXhr) => {
-        this.actions.AddEventFail(jqXhr.responseJSON.message);
+        this.actions.addEventFail(jqXhr.responseJSON.message);
       });
   }
 
-  removeEvent(event) {
+  removeEvent(eventId) {
     $.ajax({
       type: 'DELETE',
       url: '/api/events',
-      data: { event: event}
+      data: { eventId: eventId}
     })
       .done((data) => {
         this.actions.removeEventSuccess(data);

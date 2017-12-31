@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import EventStore from '../stores/EventStore'
 import EventActions from '../actions/EventActions';
 import moment from 'moment';
@@ -41,30 +42,38 @@ class Event extends React.Component {
     this.setState(state);
   }
 
-  removeEvent(event, e) {
+  removeEvent(eventId, e) {
     e.preventDefault();
-    EventActions.removeEvent(event);
+    EventActions.removeEvent(eventId);
   }
 
   render() {
+    if (this.state.events.length == 0) {
+      return (<div/>);
+    }
     let events = this.state.events.map(event => {
       return (
-        <tr>
-          <td>
-            {event.monthVisible ? event.desc : "<Por atribuir>"}
+        <tr key={event.eventId}>
+          <td style={event.monthVisible ? {} : { 'color': '#ccc' }}>
+            { event.monthVisible ?
+              ( <Link to={'/event/' + event.eventId}>
+                  {event.desc}
+                </Link>
+              ) : "Por atribuir"
+            }
           </td>
           <td>
             {event.organizerName}
           </td>
-          <td>
-            {event.local}
-          </td>
-          <td>
-            {moment(event.date).format('DD-MM-YYYY')}
-          </td>
-          <td className='col-lg-1  col-xs-1 remove'>
-            <a type='button' className='btn btn-default btn-xs' onClick={this.removeEvent.bind(this, event)}> Remover</a>
-          </td>
+          <td style={event.local ? {} : {'color': '#ccc'}}>
+              {event.local ? event.local : "<Por definir>"}
+            </td>
+            <td  style={event.monthVisible ? {} : {'color': '#ccc'}}>
+              {event.monthVisible ? moment(event.date).format('DD-MM-YYYY')  : "<Por atribuir>"}
+            </td>
+            <td className='col-lg-1  col-xs-1 remove'>
+              <a type='button' className='btn btn-default btn-xs' onClick={this.removeEvent.bind(this, event.eventId)}> Remover</a>
+            </td>
         </tr>
       )
     });
@@ -85,7 +94,7 @@ class Event extends React.Component {
     } else {
       addEvent = (
       <div>
-        <strong>Inscrições fechadas. Todos os meses já se encontram atribuídos. </strong>
+        <strong style={{'color': '#FF9F00 '}}>Inscrições fechadas. Todos os meses já se encontram atribuídos. </strong>
       </div>
       );
     }

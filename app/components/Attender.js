@@ -33,6 +33,11 @@ class Attender extends React.Component {
     this.setState(state);
   }
 
+  editEvent(event) {
+    event.preventDefault();
+    AttenderActions.updateEvent(this.state.event, this.state.pinCode);
+  }
+
   removeAttender(attender, event) {
     event.preventDefault();
     AttenderActions.removeAttender(attender, this.props.eventId || this.props.params.eventId);
@@ -43,7 +48,7 @@ class Attender extends React.Component {
     if (this.state.event.attenders) {
       attenders = this.state.event.attenders.map(attender => {
         return (
-          <tr>
+          <tr key={attender._id}>
             <td>
               {attender.name}
             </td>
@@ -60,6 +65,34 @@ class Attender extends React.Component {
 
     return (
       <div className='container'>
+        <div className="row">
+          <div className="col-lg-6">
+            <div className="input-group">
+              <span className="input-group-btn">
+                <span className="form-control" style={{ 'backgroundColor': '#f9f9f9' }}
+                  type="text">Organizador:</span>
+              </span>
+              <span type="text" className="form-control" placeholder="" >
+                {this.state.event.organizerName}
+              </span>
+            </div>
+          </div>
+          <div className="col-lg-6">
+            <div className="input-group">
+              <span className="input-group-btn">
+                <span className="form-control" style={{ 'backgroundColor': '#f9f9f9' }}
+                  type="text">Local escolhido:</span>
+              </span>
+              <input type='text' className={'form-control ' + this.state.localValidationState} ref='localField' value={this.state.event.local}
+                placeholder="Introduza o local" onChange={AttenderActions.updateEventLocal} autoFocus />
+              <span className="input-group-btn">
+                <button className="btn btn-default" onClick={this.editEvent.bind(this)}
+                  type="button">Guardar</button>
+              </span>
+            </div>
+            <span className='help-block'>{this.state.helpBlock || <br/>}</span>
+          </div>
+        </div>
         <div className='panel panel-default'>
           <table className='table table-striped'>
             <thead>

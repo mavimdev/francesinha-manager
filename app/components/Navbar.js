@@ -13,12 +13,12 @@ class Navbar extends React.Component {
   componentDidMount() {
     NavbarStore.listen(this.onChange);
     NavbarActions.getEvents();
-    let socket = io.connect();
+    // let socket = io.connect();
 
-    socket.on('onlineUsers', (data) => {
-      NavbarActions.updateOnlineUsers(data);
-    });
-
+    // socket.on('onlineUsers', (data) => {
+    //   NavbarActions.updateOnlineUsers(data);
+    // });
+   
     $(document).ajaxStart(() => {
       NavbarActions.updateAjaxAnimation('fadeIn');
     });
@@ -26,7 +26,7 @@ class Navbar extends React.Component {
     $(document).ajaxComplete(() => {
       setTimeout(() => {
         NavbarActions.updateAjaxAnimation('fadeOut');
-      }, 750);
+      }, 500);
     });
   }
 
@@ -39,14 +39,22 @@ class Navbar extends React.Component {
   }
 
   render() {
-    let events = this.state.events.map((ev) => {
-      return (
-        <li key={ev.eventId}>
-          <Link to={'/event/' + ev.eventId}>
-          {ev.desc}
-          </Link>
-        </li>
-      )
+    let events = this.state.events
+      .filter((ev) => { return (ev.monthVisible) })
+      .map((ev) => {
+        return (
+          <li key={ev.eventId}>
+            <Link to={'/event/' + ev.eventId}>
+              {ev.desc}
+            </Link>
+          </li >
+        )
+      });
+
+    let now = new Date();
+    let currentEventId = now.getFullYear().toString().concat(now.getMonth());
+    let currentEvent = this.state.events.find((ev) => { 
+      return (ev.eventId == currentEventId); 
     });
 
     return (
@@ -81,12 +89,12 @@ class Navbar extends React.Component {
             <li className='dropdown'>
               <a href='#' className='dropdown-toggle' data-toggle='dropdown'>Quem vai <span className='caret'></span></a>
               <ul className='dropdown-menu'>
-                {events}
+                {events.length  > 0 ? events : <li style={{'color': '#ccc', 'textAlign': 'center'}}>Sem eventos marcados</li>}
               </ul>
             </li>
           </ul>
-          <span className="navbar-text">
-            Inscritos este mês:
+          <span className="navbar-text" style={{'float': 'right', 'marginRight': '100px'}}>
+            Inscritos este mês: {currentEvent && currentEvent.monthVisible ? currentEvent.attenders.length : 0}
           </span>
         </div>
       </nav>

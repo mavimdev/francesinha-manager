@@ -6,7 +6,10 @@ class AttenderActions {
       'getAttendersSuccess',
       'getAttendersFail',
       'removeAttenderSuccess',
-      'removeAttenderFail'
+      'removeAttenderFail',
+      'updateEventLocal',
+      'updateEventSuccess',
+      'updateEventFail'
     );
   }
 
@@ -31,6 +34,20 @@ class AttenderActions {
       })
       .fail((jqXhr) => {
         this.actions.removeAttenderFail(jqXhr.responseJSON.message);
+      });
+  }
+
+  updateEvent(event, pinCode) {
+    $.ajax({
+      type: 'PUT',
+      url: '/api/events',
+      data: {eventId: event.eventId, local: event.local, organizerName: event.organizerName, pinCode: pinCode}
+    })
+      .done((data) => {
+        this.actions.updateEventSuccess(data);
+      })
+      .fail((jqXhr) => {
+        this.actions.updateEventFail(jqXhr.responseJSON.message);
       });
   }
 

@@ -36,7 +36,7 @@ class EventStore {
 
   onRemoveEventSuccess(data) {
     toastr.success(data.message);
-    this.event = data.event;
+    this.events = data.events;
   }
 
   onUpdateOrganizer(event) {

@@ -157,15 +157,13 @@ app.delete('/api/attenders', function (req, res, next) {
 });
 
 
-
-
 /**
  * POST /api/events
  * Adds new event (with the organizer) to the database.
  */
 app.post('/api/events', function (req, res, next) {
   var organizerName = req.body.organizerName;
-  var pinCode = req.body.pinCode;
+  var pinCode = Number(req.body.pinCode);
   var currentYear = new Date().getFullYear();
 
   async.waterfall([
@@ -189,7 +187,7 @@ app.post('/api/events', function (req, res, next) {
       })
     },
     function (usedMonths, callback) {
-      var randomMonth = _.sample(_.difference(_.range(11), usedMonths));
+      var randomMonth = _.sample(_.difference(_.range(12), usedMonths));
 
       var event = new Event({
         eventId: currentYear.toString().concat(randomMonth),
@@ -222,13 +220,37 @@ app.post('/api/events', function (req, res, next) {
     },
     function (events) {
       if (events.length == MONTHS_DESC.length) {
-        Event.update({ year: currentYear }, { monthVisible: true }, function (err) {
+        Event.update({ year: currentYear }, { monthVisible: true }, { multi: true },  function (err) {
           if (err) return next(err);
         })
       }
       res.send({ events: events, message: 'Inscrição efetuada com sucesso' });
     }
   ]);
+});
+
+
+/**
+ * PUT /api/events
+ * Updates an event to the database.
+ */
+app.put('/api/events', function (req, res, next) {
+  var eventId = Number(req.body.eventId);
+  var newLocal = req.body.local;
+  var newOrganizerName = req.body.organizerName;
+  var pinCode = Number(req.body.pinCode);
+
+  Event.update({ eventId: eventId, pinCode: pinCode },
+    { $set: { local: newLocal, organizerName: newOrganizerName } }, function (err, result) {
+      if (err) return next(err);
+
+      if (result.nModified == 1) {
+        res.send({ message: 'Atualizado com sucesso' });
+      } else {
+        return res.status(404).send({ message: 'Evento não encontrado ou código PIN incorreto.' });
+      }
+    })
+
 });
 
 
@@ -245,7 +267,7 @@ app.delete('/api/events', function (req, res, next) {
       Event.remove({ eventId: eventId, pinCode: pinCode }, function (err, result) {
         if (err) return next(err);
 
-        if (result.nRemoved > 0) {
+        if (result.result.ok == 1) {
           callback(null);
         } else {
           return res.status(404).send({ message: 'Evento não encontrado ou código PIN incorreto.' });
@@ -254,7 +276,7 @@ app.delete('/api/events', function (req, res, next) {
       })
     },
     function () {
-      Event.find({ year: currentYear }, function (err, events) {
+      Event.find({ year: new Date().getFullYear() }, function (err, events) {
         if (err) return next(err);
 
         res.send({ events: events, message: 'Removido com sucesso' });
