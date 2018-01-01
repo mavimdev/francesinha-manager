@@ -19,7 +19,7 @@ class AttenderActions {
         this.actions.getAttendersSuccess(data);
       })
       .fail((jqXhr) => {
-        this.actions.getAttendersFail(jqXhr);
+        this.actions.getAttendersFail(jqXhr.responseJSON.message);
       });
   }
 

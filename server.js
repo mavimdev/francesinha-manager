@@ -48,7 +48,7 @@ app.get('/api/event/:eventId', function (req, res, next) {
     if (err) return next(err);
 
     if (!event) {
-      return res.status(404).send({ message: 'Event not found.' });
+      return res.status(404).send({ message: 'Evento não encontrado.' });
     }
 
     res.send(event);
@@ -89,7 +89,7 @@ app.post('/api/attenders', function (req, res, next) {
         if (err) return next(err);
 
         if (!event) {
-          return res.status(409).send({ message: 'Não existe esse evento.' });
+          return res.status(409).send({ message: 'O evento não existe.' });
         }
 
         if (_.find(event.attenders, function (attender) {
