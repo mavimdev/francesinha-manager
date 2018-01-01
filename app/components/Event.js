@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 import EventStore from '../stores/EventStore'
 import EventActions from '../actions/EventActions';
 import moment from 'moment';
@@ -44,39 +44,38 @@ class Event extends React.Component {
 
   removeEvent(eventId, e) {
     e.preventDefault();
-    EventActions.removeEvent(eventId);
+    EventActions.removeEvent(eventId, this.state.pinCode);
   }
 
   render() {
-    if (this.state.events.length == 0) {
-      return (<div/>);
-    }
-    let events = this.state.events.map(event => {
-      return (
-        <tr key={event.eventId}>
-          <td style={event.monthVisible ? {} : { 'color': '#ccc' }}>
-            { event.monthVisible ?
-              ( <Link to={'/event/' + event.eventId}>
+    let events = this.state.events
+      .sort((a, b) => { return a.month - b.month; })
+      .map(event => {
+        return (
+          <tr key={event.eventId}>
+            <td style={event.monthVisible ? {} : { 'color': '#ccc' }}>
+              {event.monthVisible ?
+                (<Link to={'/event/' + event.eventId}>
                   {event.desc}
                 </Link>
-              ) : "Por atribuir"
-            }
-          </td>
-          <td>
-            {event.organizerName}
-          </td>
-          <td style={event.local ? {} : {'color': '#ccc'}}>
+                ) : "Por atribuir"
+              }
+            </td>
+            <td>
+              {event.organizerName}
+            </td>
+            <td style={event.local ? {} : { 'color': '#ccc' }}>
               {event.local ? event.local : "<Por definir>"}
             </td>
-            <td  style={event.monthVisible ? {} : {'color': '#ccc'}}>
-              {event.monthVisible ? moment(event.date).format('DD-MM-YYYY')  : "<Por atribuir>"}
+            <td style={event.monthVisible ? {} : { 'color': '#ccc' }}>
+              {event.monthVisible ? moment(event.date).format('DD-MM-YYYY') : "<Por atribuir>"}
             </td>
             <td className='col-lg-1  col-xs-1 remove'>
               <a type='button' className='btn btn-default btn-xs' onClick={this.removeEvent.bind(this, event.eventId)}> Remover</a>
             </td>
-        </tr>
-      )
-    });
+          </tr>
+        )
+      });
 
     var addEvent = null;
     if (events.length < EVENTS_LIMIT) {
@@ -88,14 +87,14 @@ class Event extends React.Component {
             <span className='help-block'>{this.state.helpBlock}</span>
           </div>
           <button inline type='submit' className={'btn btn-primary ' + this.state.success}>Inscrever</button>
-          <div style={{'textAlign': 'center', 'color': '#FF9F00 '}}>Os meses serão atribuídos aleatóriamente quando houver 12 inscrições.</div>
+          <div style={{ 'textAlign': 'center', 'color': '#FF9F00 ' }}>Os meses serão atribuídos aleatóriamente quando houver 12 inscrições.</div>
         </form>
       );
     } else {
       addEvent = (
-      <div>
-        <strong style={{'color': '#FF9F00 '}}>Inscrições fechadas. Todos os meses já se encontram atribuídos. </strong>
-      </div>
+        <div>
+          <strong style={{ 'color': '#FF9F00 ' }}>Inscrições fechadas. Todos os meses já se encontram atribuídos. </strong>
+        </div>
       );
     }
 

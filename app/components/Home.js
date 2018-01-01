@@ -29,11 +29,9 @@ class Home extends React.Component {
 
   render() {
     if (!this.state.event.eventId) {
-      return (<div></div>);
+      return (<Event />);
     } else if (this.state.event.monthVisible) {
       return (<Attender eventId={this.state.event.eventId} />);
-    } else {
-      return (<Event />);
     }
   }
 }

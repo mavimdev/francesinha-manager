@@ -1,7 +1,6 @@
 // Babel ES6/JSX Compiler
 require('babel-register');
 
-var moment = require('moment');
 var _ = require('underscore');
 var async = require('async');
 var request = require('request');
@@ -189,13 +188,17 @@ app.post('/api/events', function (req, res, next) {
     function (usedMonths, callback) {
       var randomMonth = _.sample(_.difference(_.range(12), usedMonths));
 
+      let lastFriday = new Date(currentYear, randomMonth + 1, 1);
+      lastFriday.setDate(lastFriday.getDate()-1);
+      lastFriday.setDate(lastFriday.getDate()-(2+lastFriday.getDay())%7);
+
       var event = new Event({
         eventId: currentYear.toString().concat(randomMonth),
         desc: MONTHS_DESC[randomMonth],
         organizerName: organizerName,
         pinCode: pinCode,
         local: "",
-        date: moment(new Date(currentYear, randomMonth + 1, 1)).day(-5),
+        date: lastFriday,
         month: randomMonth,
         monthVisible: false,
         year: currentYear,
@@ -259,15 +262,15 @@ app.put('/api/events', function (req, res, next) {
  * Removes an event of the database.
  */
 app.delete('/api/events', function (req, res, next) {
-  var eventId = req.body.eventId;
-  var pinCode = req.body.pinCode;
+  var eventId = Number(req.body.eventId);
+  var pinCode = Number(req.body.pinCode);
 
   async.waterfall([
     function (callback) {
       Event.remove({ eventId: eventId, pinCode: pinCode }, function (err, result) {
         if (err) return next(err);
 
-        if (result.result.ok == 1) {
+        if (result.result.n == 1) {
           callback(null);
         } else {
           return res.status(404).send({ message: 'Evento não encontrado ou código PIN incorreto.' });

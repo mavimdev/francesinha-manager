@@ -67,9 +67,9 @@ gulp.task('browserify', ['browserify-vendor'], function() {
     .bundle()
     .pipe(source('bundle.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init({ loadMaps: true }))
+    .pipe(gulpif(!production, sourcemaps.init({ loadMaps: true })))
     .pipe(gulpif(production, uglify({ mangle: false })))
-    .pipe(sourcemaps.write('.'))
+    .pipe(gulpif(!production, sourcemaps.write('.')))
     .pipe(gulp.dest('public/js'));
 });
 
@@ -96,8 +96,8 @@ gulp.task('browserify-watch', ['browserify-vendor'], function() {
       })
       .pipe(source('bundle.js'))
       .pipe(buffer())
-      .pipe(sourcemaps.init({ loadMaps: true }))
-      .pipe(sourcemaps.write('.'))
+      .pipe(gulpif(!production, sourcemaps.init({ loadMaps: true })))
+      .pipe(gulpif(!production, sourcemaps.write('.')))
       .pipe(gulp.dest('public/js/'));
   }
 });

@@ -40,6 +40,7 @@ class Navbar extends React.Component {
 
   render() {
     let events = this.state.events
+    .sort((a, b) => { return a.month - b.month; })
       .filter((ev) => { return (ev.monthVisible) })
       .map((ev) => {
         return (

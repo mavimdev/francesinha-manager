@@ -41,11 +41,11 @@ class EventActions {
       });
   }
 
-  removeEvent(eventId) {
+  removeEvent(eventId, pinCode) {
     $.ajax({
       type: 'DELETE',
       url: '/api/events',
-      data: { eventId: eventId}
+      data: { eventId: eventId, pinCode: pinCode}
     })
       .done((data) => {
         this.actions.removeEventSuccess(data);

@@ -2,6 +2,7 @@ import React from 'react';
 import AttenderStore from '../stores/AttenderStore'
 import AttenderActions from '../actions/AttenderActions';
 import AddAttender from '../components/AddAttender';
+import moment from 'moment';
 
 class Attender extends React.Component {
   constructor(props) {
@@ -65,6 +66,30 @@ class Attender extends React.Component {
 
     return (
       <div className='container'>
+      <div className="row">
+          <div className="col-lg-6">
+            <div className="input-group">
+              <span className="input-group-btn">
+                <span className="form-control" style={{ 'backgroundColor': '#f9f9f9' }}
+                  type="text">Mês:</span>
+              </span>
+              <span type="text" className="form-control" placeholder="" >
+                {this.state.event.desc}
+              </span>
+            </div>
+          </div>
+          <div className="col-lg-6">
+            <div className="input-group">
+              <span className="input-group-btn">
+                <span className="form-control" style={{ 'backgroundColor': '#f9f9f9' }}
+                  type="text">Data:</span>
+              </span>
+              <span type="text" className="form-control" placeholder="" >
+                {moment(this.state.event.date).format('DD-MM-YYYY')}
+              </span>
+            </div>
+          </div>
+        </div>
         <div className="row">
           <div className="col-lg-6">
             <div className="input-group">
@@ -93,6 +118,7 @@ class Attender extends React.Component {
             <span className='help-block'>{this.state.helpBlock || <br/>}</span>
           </div>
         </div>
+
         <div className='panel panel-default'>
           <table className='table table-striped'>
             <thead>
