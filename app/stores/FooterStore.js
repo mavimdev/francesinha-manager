@@ -19,7 +19,9 @@ class FooterStore {
   }
 
   onGetThisMonthOrganizerSuccess(data) {
-    this.thisMonthOrganizer = data.organizerName;
+    if (data.monthVisible) {
+      this.thisMonthOrganizer = data.organizerName;
+    }
   }
 
   onGetThisMonthOrganizerFail(jqXhr) {
@@ -27,7 +29,9 @@ class FooterStore {
   }
 
   onGetNextMonthOrganizerSuccess(data) {
-    this.nextMonthOrganizer = data.organizerName;
+    if (data.monthVisible) {
+      this.nextMonthOrganizer = data.organizerName;
+    }
   }
 
   onGetNextMonthOrganizerFail(jqXhr) {
