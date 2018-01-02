@@ -58,7 +58,7 @@ class Event extends React.Component {
                 (<Link to={'/event/' + event.eventId}>
                   {event.desc}
                 </Link>
-                ) : "Por atribuir"
+                ) : "<Por atribuir>"
               }
             </td>
             <td>
