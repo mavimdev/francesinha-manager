@@ -101,6 +101,7 @@ class Event extends React.Component {
     return (
       <div className='container'>
       <h4 className='text-center'>Inscrições para a escolha de francesinhas</h4>
+      <br/>
         <div className='panel panel-default'>
           <table className='table table-striped'>
             <thead>
