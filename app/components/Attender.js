@@ -45,6 +45,9 @@ class Attender extends React.Component {
   }
 
   render() {
+    if (!this.state.event.monthVisible) {
+      return (<div/>);
+    }
     let attenders = [];
     if (this.state.event.attenders) {
       attenders = this.state.event.attenders.map(attender => {
@@ -66,30 +69,8 @@ class Attender extends React.Component {
 
     return (
       <div className='container'>
-      <div className="row">
-          <div className="col-lg-6">
-            <div className="input-group">
-              <span className="input-group-btn">
-                <span className="form-control" style={{ 'backgroundColor': '#f9f9f9' }}
-                  type="text">Mês:</span>
-              </span>
-              <span type="text" className="form-control" placeholder="" >
-                {this.state.event.desc}
-              </span>
-            </div>
-          </div>
-          <div className="col-lg-6">
-            <div className="input-group">
-              <span className="input-group-btn">
-                <span className="form-control" style={{ 'backgroundColor': '#f9f9f9' }}
-                  type="text">Data:</span>
-              </span>
-              <span type="text" className="form-control" placeholder="" >
-                {moment(this.state.event.date).format('DD-MM-YYYY')}
-              </span>
-            </div>
-          </div>
-        </div>
+      <h4 className='text-center'>Inscrições para o mês de {this.state.event.desc} ({moment(this.state.event.date).format('DD-MM-YYYY')})</h4>
+        <br/>
         <div className="row">
           <div className="col-lg-6">
             <div className="input-group">

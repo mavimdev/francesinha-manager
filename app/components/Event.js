@@ -87,19 +87,20 @@ class Event extends React.Component {
             <span className='help-block'>{this.state.helpBlock}</span>
           </div>
           <button inline type='submit' className={'btn btn-primary ' + this.state.success}>Inscrever</button>
-          <div style={{ 'textAlign': 'center', 'color': '#FF9F00 ' }}>Os meses serão atribuídos aleatóriamente quando houver 12 inscrições.</div>
+          <div style={{ 'textAlign': 'center', 'color': '#3b3f51 ' }}>Os meses serão atribuídos aleatóriamente quando houver 12 inscrições.</div>
         </form>
       );
     } else {
       addEvent = (
         <div>
-          <strong style={{ 'color': '#FF9F00 ' }}>Inscrições fechadas. Todos os meses já se encontram atribuídos. </strong>
+          <strong style={{ 'color': '#3b3f51 ' }}>Inscrições fechadas. Todos os meses já estão atribuídos. </strong>
         </div>
       );
     }
 
     return (
       <div className='container'>
+      <h4 className='text-center'>Inscrições para a escolha de francesinhas</h4>
         <div className='panel panel-default'>
           <table className='table table-striped'>
             <thead>
