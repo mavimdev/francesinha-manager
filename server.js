@@ -278,7 +278,7 @@ app.delete('/api/events', function (req, res, next) {
       Event.remove({ eventId: eventId, pinCode: pinCode }, function (err, result) {
         if (err) return next(err);
 
-        if (result.result.n == 1) {
+        if (result.deletedCount == 1) {
           callback(null);
         } else {
           return res.status(404).send({ message: 'Evento não encontrado ou código PIN incorreto.' });
