@@ -23,10 +23,18 @@ var MONTHS_DESC = ['Janeiro', 'Fevereiro', 'Março', 'Abril'
   , 'Maio', 'Junho', 'Julho', 'Agosto'
   , 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 
-mongoose.connect(config.database);
-mongoose.connection.on('error', function () {
-  console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?');
-});
+mongoose.connect(config.database).then(
+  () => { 
+    console.info('Connected to MongoDB.');
+   },
+  err => {
+    console.error('Error: Could not connect to MongoDB: ' + err);
+   }
+);
+
+// mongoose.connection.on('error', function () {
+//   console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?');
+// });
 
 // express middleware
 var app = express();
