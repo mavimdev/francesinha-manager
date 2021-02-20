@@ -3,7 +3,7 @@
   "description": "Manager app for francesinha",
   "version": "1.0.0",
   "engines": {
-    "node": "14.x"
+    "node": "9.x"
   },
   "repository": {
     "type": "git",
